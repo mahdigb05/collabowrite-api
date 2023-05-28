@@ -1,19 +1,18 @@
 package com.z7.collabowriteapi.entity;
-
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+import java.util.List;
+
+@Document(collection="user")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
 
-    private Long id;
+    private String id;
     private String email;
     private String password;
-
-
 }
