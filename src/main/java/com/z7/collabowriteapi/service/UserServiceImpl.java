@@ -1,6 +1,7 @@
 package com.z7.collabowriteapi.service;
 
 import com.z7.collabowriteapi.entity.User;
+import com.z7.collabowriteapi.exception.UserNonFoundException;
 import com.z7.collabowriteapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,9 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public User findUserById(String userId) throws Exception {
+    public User findUserById(String userId) throws UserNonFoundException {
         Optional<User> user = userRepository.findById(userId);
         if(user.isPresent()) return user.get();
-        throw new Exception("user not found");
+        throw new UserNonFoundException("user not available");
     }
 }
