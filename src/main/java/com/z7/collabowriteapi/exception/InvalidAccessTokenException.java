@@ -1,24 +1,17 @@
 package com.z7.collabowriteapi.exception;
 
-public class InvalidAccessTokenException extends Exception{
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    public InvalidAccessTokenException() {
-        super();
-    }
+import javax.naming.AuthenticationException;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class InvalidAccessTokenException extends AuthenticationException {
 
     public InvalidAccessTokenException(String message) {
         super(message);
-    }
-
-    public InvalidAccessTokenException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public InvalidAccessTokenException(Throwable cause) {
-        super(cause);
-    }
-
-    protected InvalidAccessTokenException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -20,9 +20,9 @@ public class SecurityConfig extends WebSecurityConfiguration {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf((configurer -> configurer.disable()))
                 .authorizeHttpRequests((requests) -> requests.anyRequest().authenticated())
-                .sessionManagement((configurer) -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf((configurer -> configurer.disable()));
+                .sessionManagement((configurer) -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
 

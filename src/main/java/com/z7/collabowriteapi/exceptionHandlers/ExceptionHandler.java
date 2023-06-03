@@ -2,9 +2,7 @@ package com.z7.collabowriteapi.exceptionHandlers;
 
 
 import com.z7.collabowriteapi.entity.ErrorResponse;
-import com.z7.collabowriteapi.exception.InvalidAccessTokenException;
-import com.z7.collabowriteapi.exception.MissingAccessTokenException;
-import com.z7.collabowriteapi.exception.UserNonFoundException;
+import com.z7.collabowriteapi.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,15 +17,29 @@ public class ExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
+
+    // security exceptions
     public ResponseEntity<Object> missingAccessTokenExceptionHandler(MissingAccessTokenException exception, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    public ResponseEntity<Object> invalidAccessTokenException(InvalidAccessTokenException exception, WebRequest request) {
+    public ResponseEntity<Object> invalidAccessTokenExceptionHandler(InvalidAccessTokenException exception, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.FORBIDDEN);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
+
+    public ResponseEntity<Object> internalServerExceptionHandler(InternalServerError exception, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
+    public ResponseEntity<Object> authenticationProviderExceptionHandler(AuthenticationProviderException exception, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+
 
 
 }
