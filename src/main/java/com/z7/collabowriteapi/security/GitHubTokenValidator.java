@@ -10,8 +10,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-@AllArgsConstructor
-@NoArgsConstructor
 public class GitHubTokenValidator {
 
     public UserCredentials validateToken(String token) throws InternalServerError {

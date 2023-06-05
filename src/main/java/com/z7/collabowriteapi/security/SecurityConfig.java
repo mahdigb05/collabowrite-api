@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfiguration {
+public class SecurityConfig {
 
     @Autowired
     private TokenValidatorFilter tokenValidatorFilter;
@@ -21,6 +21,7 @@ public class SecurityConfig extends WebSecurityConfiguration {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf((configurer -> configurer.disable()))
+                .addFilterBefore(tokenValidatorFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests.anyRequest().authenticated())
                 .sessionManagement((configurer) -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();

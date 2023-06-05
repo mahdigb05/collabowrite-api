@@ -1,4 +1,4 @@
-package com.z7.collabowriteapi.exception;
+package com.z7.collabowriteapi.exception.security;
 
 import javax.naming.AuthenticationException;
 
