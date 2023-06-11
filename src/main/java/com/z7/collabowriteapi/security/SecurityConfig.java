@@ -17,12 +17,16 @@ public class SecurityConfig {
     @Autowired
     private TokenValidatorFilter tokenValidatorFilter;
 
+    @Autowired
+    private CustomBasicEntryPoint customBasicEntryPoint;
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf((configurer -> configurer.disable()))
-                .addFilterBefore(tokenValidatorFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(configurer -> configurer.authenticationEntryPoint(customBasicEntryPoint))
                 .authorizeHttpRequests((requests) -> requests.anyRequest().authenticated())
+                .addFilterBefore(tokenValidatorFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((configurer) -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }

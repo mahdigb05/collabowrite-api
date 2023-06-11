@@ -13,7 +13,6 @@ public class TokenAuthentication implements Authentication {
 
     private final String token;
     private final String username;
-    private Boolean authenticated;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -42,7 +41,7 @@ public class TokenAuthentication implements Authentication {
 
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-        this.authenticated = isAuthenticated;
+
     }
 
     @Override

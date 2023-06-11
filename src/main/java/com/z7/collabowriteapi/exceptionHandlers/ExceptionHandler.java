@@ -5,12 +5,13 @@ import com.z7.collabowriteapi.entity.ErrorResponse;
 import com.z7.collabowriteapi.exception.*;
 import com.z7.collabowriteapi.exception.security.AuthenticationProviderException;
 import com.z7.collabowriteapi.exception.security.InvalidAccessTokenException;
-import com.z7.collabowriteapi.exception.security.MissingAccessTokenException;
 import com.z7.collabowriteapi.exception.security.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+
 
 
 @ControllerAdvice
@@ -22,12 +23,12 @@ public class ExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
-
     // security exceptions
-    @org.springframework.web.bind.annotation.ExceptionHandler(MissingAccessTokenException.class)
-    public ResponseEntity<Object> missingAccessTokenExceptionHandler(MissingAccessTokenException exception, WebRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    @org.springframework.web.bind.annotation.ExceptionHandler(InsufficientAuthenticationException.class)
+    public ResponseEntity<Object> missingAccessTokenExceptionHandler(InsufficientAuthenticationException exception, WebRequest request) {
+        System.out.println("inside");
+        ErrorResponse errorResponse = new ErrorResponse("missing token", HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(InvalidAccessTokenException.class)

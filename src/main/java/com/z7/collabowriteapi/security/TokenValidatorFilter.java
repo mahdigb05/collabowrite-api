@@ -14,6 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -43,13 +45,13 @@ public class TokenValidatorFilter extends OncePerRequestFilter {
         UserCredentials userCredentials = null;
         //we need to check if the header exists or not
         if (accessToken == null) {
-            throw new MissingAccessTokenException("missing access token");
+            throw new InsufficientAuthenticationException("missing accessToken");
         }
-        if (authProvider == null || !Arrays.asList(SUPPORTED_AUTHENTICATION_PROVIDERS).contains(authProvider)) {
-            throw new AuthenticationProviderException("authentication provider not specified");
+        if (authProvider == null) {
+            throw new InsufficientAuthenticationException("authentication provider not specified");
         }
         if (!Arrays.asList(SUPPORTED_AUTHENTICATION_PROVIDERS).contains(authProvider)) {
-            throw new AuthenticationProviderException("Authentication provider not supported, must be one of the following : " + SUPPORTED_AUTHENTICATION_PROVIDERS);
+            throw new BadCredentialsException("Authentication provider not supported, must be one of the following : " + SUPPORTED_AUTHENTICATION_PROVIDERS);
         }
         //check the token from the cache (not yet implemented)
         //check if user with the same token exists in cache
@@ -60,7 +62,7 @@ public class TokenValidatorFilter extends OncePerRequestFilter {
             if (authProvider == "github") {
                 //check the token from the authentication server if doesn't exist on the cache
                 userCredentials = gitHubTokenValidator.validateToken(accessToken);
-                if (userCredentials == null) throw new InvalidAccessTokenException("invalid access token");
+                if (userCredentials == null) throw new BadCredentialsException("invalid access token");
                 //setting credentials & token
                 userCredentialsCacheService.setUserCredentials(accessToken, userCredentials);
                 tokenCacheService.setToken(userCredentials.getEmail(), accessToken);
@@ -70,11 +72,11 @@ public class TokenValidatorFilter extends OncePerRequestFilter {
                     String deleteToken = tokenCacheService.removeToken(userCredentials.getEmail());
                     userCredentialsCacheService.removeUserCredentials(deleteToken);
                 } catch (TokenNotFoundInCache tokenNotFoundInCache) {
-
+                    //do nothing
                 }
             }
         }
-        TokenAuthentication tokenAuthentication = new TokenAuthentication(accessToken, userCredentials.getEmail(), true);
+        TokenAuthentication tokenAuthentication = new TokenAuthentication(accessToken, userCredentials.getEmail());
         SecurityContextHolder.getContext().setAuthentication(tokenAuthentication);
         filterChain.doFilter(request, response);
     }
