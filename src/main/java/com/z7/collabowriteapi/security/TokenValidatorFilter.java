@@ -2,9 +2,6 @@ package com.z7.collabowriteapi.security;
 
 import com.z7.collabowriteapi.exception.cache.TokenNotFoundInCache;
 import com.z7.collabowriteapi.exception.cache.UserCredentialsNotFoundInCache;
-import com.z7.collabowriteapi.exception.security.AuthenticationProviderException;
-import com.z7.collabowriteapi.exception.security.InvalidAccessTokenException;
-import com.z7.collabowriteapi.exception.security.MissingAccessTokenException;
 import com.z7.collabowriteapi.model.UserCredentials;
 import com.z7.collabowriteapi.service.TokenCacheService;
 import com.z7.collabowriteapi.service.UserCredentialsCacheService;
@@ -22,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 
 @Component
 public class TokenValidatorFilter extends OncePerRequestFilter {
@@ -62,8 +60,10 @@ public class TokenValidatorFilter extends OncePerRequestFilter {
             if (authProvider == "github") {
                 //check the token from the authentication server if doesn't exist on the cache
                 userCredentials = gitHubTokenValidator.validateToken(accessToken);
-                if (userCredentials == null) throw new BadCredentialsException("invalid access token");
+                if (userCredentials == null || userCredentials.getTokenExpirationDate().compareTo(new Date()) <= 0)
+                    throw new BadCredentialsException("invalid access token");
                 //setting credentials & token
+
                 userCredentialsCacheService.setUserCredentials(accessToken, userCredentials);
                 tokenCacheService.setToken(userCredentials.getEmail(), accessToken);
 

@@ -6,6 +6,7 @@ public class Character {
 
     private String globalId;
     private List<CharacterIdentifier> identifier;
+    private Long sequenceNumber;
     private String value;
 
 }

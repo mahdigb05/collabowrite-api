@@ -19,7 +19,8 @@ public class Doc {
 
     @Id
     private String id;
-    private List<Character> characters;
+    private List<Character> insertions;
+    private List<Character> deletions;
     @DBRef
     private List<User> accessibleUsers;
 

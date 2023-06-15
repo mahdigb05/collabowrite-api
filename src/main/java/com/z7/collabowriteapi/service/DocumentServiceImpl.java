@@ -52,7 +52,7 @@ public class DocumentServiceImpl implements DocumentService{
     @Override
     public void addCharacterToDocument(String documentId, Character character) {
         Query query = new Query(Criteria.where("id").is(documentId));
-        Update update = new Update().push("characters", character);
+        Update update = new Update().push("insertions", character);
         mongoTemplate.updateFirst(query, update, Doc.class);
     }
 
